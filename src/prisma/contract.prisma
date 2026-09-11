@@ -1,0 +1,51 @@
+// use prisma-next
+
+model Conversation {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  messages  Message[]
+  case      SupportCase?
+}
+
+model Message {
+  id             Int       @id @default(autoincrement())
+  conversationId Int
+  role           String
+  content        String
+  category       String?
+  urgency        String?
+  safeguarding  Boolean?
+  disposition    String?
+  createdAt      TimestamptzString @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model SupportCase {
+  id             Int       @id @default(autoincrement())
+  conversationId Int       @unique
+  summary        String
+  status         String    @default("new")
+  urgency        String
+  safeguarding  Boolean   @default(false)
+  claimedBy      String?
+  claimedAt      TimestamptzString?
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  claim CaseClaim?
+}
+
+model CaseClaim {
+  id            Int       @id @default(autoincrement())
+  supportCaseId Int       @unique
+  staffName     String
+  claimedAt     TimestamptzString @default(now())
+
+  supportCase SupportCase @relation(fields: [supportCaseId], references: [id])
+}
