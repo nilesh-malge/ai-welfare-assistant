@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type CaseMessage = {
   id: number;
@@ -38,6 +38,7 @@ export default function StaffPage() {
   const [isClaiming, setIsClaiming] = useState(false);
   const [error, setError] = useState("");
   const [claimMessage, setClaimMessage] = useState("");
+  const detailsRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     async function loadCases() {
@@ -65,6 +66,18 @@ export default function StaffPage() {
 
     loadCases();
   }, []);
+
+  function handleCaseSelect(supportCase: SupportCase) {
+    setSelectedCase(supportCase);
+    setClaimMessage("");
+
+    requestAnimationFrame(() => {
+      detailsRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
 
   async function handleClaim() {
     if (!selectedCase) {
@@ -216,10 +229,7 @@ export default function StaffPage() {
                 <button
                   key={supportCase.id}
                   type="button"
-                  onClick={() => {
-                    setSelectedCase(supportCase);
-                    setClaimMessage("");
-                  }}
+                  onClick={() => handleCaseSelect(supportCase)}
                   className={`w-full px-5 py-4 text-left hover:bg-slate-50 ${
                     selectedCase?.id === supportCase.id ? "bg-slate-50" : ""
                   }`}
@@ -274,7 +284,10 @@ export default function StaffPage() {
             </div>
           </section>
 
-          <section className="rounded-2xl border border-slate-200 bg-white">
+          <section
+            ref={detailsRef}
+            className="scroll-mt-6 rounded-2xl border border-slate-200 bg-white"
+          >
             {selectedCase ? (
               <>
                 <div className="border-b border-slate-200 px-6 py-5">
