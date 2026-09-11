@@ -6,6 +6,14 @@ The application gives students a simple chat interface where they can explain wh
 
 The main thing I focused on was keeping the AI useful without making it responsible for the final safety decision.
 
+## Live application
+
+Student support:
+https://ai-welfare-assistant-three.vercel.app
+
+Staff dashboard:
+https://ai-welfare-assistant-three.vercel.app/staff
+
 ## Running locally
 
 Install the dependencies:
@@ -130,7 +138,7 @@ The probes use the real model integration. They also go through the validation, 
 To run them against a deployed version:
 
 ```powershell
-$env:PROBE_BASE_URL="https://your-deployment-url"
+$env:PROBE_BASE_URL="https://ai-welfare-assistant-three.vercel.app"
 npm run probe
 ```
 
